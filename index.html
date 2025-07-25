@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Volume Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #f0f0f0;
+      padding: 2rem;
+    }
+    label, input {
+      display: block;
+      margin-bottom: 1rem;
+    }
+    input[type="number"] {
+      padding: 0.5rem;
+      width: 100%;
+      max-width: 300px;
+      border-radius: 0.3rem;
+      border: none;
+    }
+    .results {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #222;
+      border-radius: 0.5rem;
+    }
+    .results table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .results th, .results td {
+      border: 1px solid #444;
+      padding: 0.5rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Perfect Volume Calculator</h1>
+
+  <label>
+    Master Volume (%):
+    <input type="number" id="masterVolume" value="62.81" step="0.01" />
+  </label>
+
+  <label>
+    Specific Volume (%):
+    <input type="number" id="specificVolume" value="12.141" step="0.01" />
+  </label>
+
+  <label>
+    Windows Volume (%):
+    <input type="number" id="windowsVolume" value="40" step="0.01" />
+  </label>
+
+  <button onclick="calculate()">Calculate</button>
+
+  <div class="results" id="results"></div>
+
+  <script>
+    function calculate() {
+      const master = parseFloat(document.getElementById('masterVolume').value) / 100;
+      const specific = parseFloat(document.getElementById('specificVolume').value) / 100;
+      const windows = parseFloat(document.getElementById('windowsVolume').value) / 100;
+
+      const target = master * specific * windows;
+
+      let html = `<h2>Results (Target Volume = ${(target * 100).toFixed(2)}%)</h2>`;
+      html += '<table><tr><th>Master %</th><th>Windows %</th><th>Required Specific %</th></tr>';
+
+      const levels = [100, 50, 25];
+      levels.forEach(m => {
+        levels.forEach(w => {
+          const requiredSpecific = target / ((m / 100) * (w / 100)) * 100;
+          html += `<tr><td>${m}%</td><td>${w}%</td><td>${requiredSpecific.toFixed(2)}%</td></tr>`;
+        });
+      });
+
+      html += '</table>';
+      document.getElementById('results').innerHTML = html;
+    }
+  </script>
+</body>
+</html>
